@@ -9,35 +9,43 @@
 
 <body>
     <h1>Audio Splitter</h1>
+    <!-- Форма для загрузки аудиофайла -->
     <form id="audioForm" enctype="multipart/form-data">
         <input type="file" name="audioFile" id="audioFile" accept="audio/*">
         <button type="submit">Split Audio</button>
     </form>
+    <!-- Контейнер для отображения результатов разделения -->
     <div id="result"></div>
 
     <script>
+        // Обработчик события submit формы
         const audioForm = document.getElementById('audioForm');
         const resultDiv = document.getElementById('result');
 
         audioForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // Создаем объект FormData для отправки файла на сервер
             const formData = new FormData();
             const fileInput = document.getElementById('audioFile');
             const file = fileInput.files[0];
             formData.append('file', file);
 
             try {
+                // Отправляем файл на сервер с использованием Fetch API
                 const response = await fetch('http://localhost:8000/split/', {
                     method: 'POST',
                     body: formData
                 });
 
+                // Обработка ответа от сервера
                 if (!response.ok) {
                     throw new Error('Failed to split audio');
                 }
 
+                // Получаем данные от сервера в формате JSON
                 const data = await response.json();
+                // Отображаем результаты разделения аудиофайла
                 resultDiv.innerHTML = `
                     <p>Split successful!</p>
                     <p>Vocals: <a href="http://localhost:8000/download/vocals" download>Download Vocals</a></p>

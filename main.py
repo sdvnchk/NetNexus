@@ -1,18 +1,24 @@
+# Импорт необходимых модулей и классов из библиотек
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import subprocess
 
+# Создание экземпляра приложения FastAPI
 app = FastAPI()
+
+# Добавление middleware для обработки CORS (Cross-Origin Resource Sharing)
+# Это позволяет серверу принимать запросы от других источников (например, веб-страницы)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Разрешение всех источников (не безопасно для продакшена)
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Разрешение всех HTTP-методов
+    allow_headers=["*"]   # Разрешение всех HTTP-заголовков
 )
 
+# Функция для разделения аудиофайла на вокал и аккомпанемент с использованием Deezer Spleeter
 def split_audio(audio_file_path):
     # Создаем папку для временного сохранения разделенных аудиофайлов
     temp_output_folder = "output"
@@ -30,6 +36,7 @@ def split_audio(audio_file_path):
     
     return vocals_file, accompaniment_file
 
+# Обработчик POST-запроса для загрузки аудиофайла и его разделения
 @app.post("/split/")
 async def split_endpoint(file: UploadFile = File(...)):
     # Получаем содержимое загруженного аудиофайла
@@ -51,6 +58,7 @@ async def split_endpoint(file: UploadFile = File(...)):
     # Возвращаем пути к разделенным аудиофайлам
     return {"vocals_file": vocals_file, "accompaniment_file": accompaniment_file}
 
+# Обработчик GET-запроса для скачивания разделенных аудиофайлов
 @app.get("/download/{file_type}")
 async def download_file(file_type: str):
     if file_type == "vocals":
