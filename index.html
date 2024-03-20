@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Splitter</title>
+</head>
+
+<body>
+    <h1>Audio Splitter</h1>
+    <form id="audioForm" enctype="multipart/form-data">
+        <input type="file" name="audioFile" id="audioFile" accept="audio/*">
+        <button type="submit">Split Audio</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        const audioForm = document.getElementById('audioForm');
+        const resultDiv = document.getElementById('result');
+
+        audioForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('audioFile');
+            const file = fileInput.files[0];
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('http://localhost:8000/split/', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to split audio');
+                }
+
+                const data = await response.json();
+                resultDiv.innerHTML = `
+                    <p>Split successful!</p>
+                    <p>Vocals: <a href="http://localhost:8000/download/vocals" download>Download Vocals</a></p>
+                    <p>Accompaniment: <a href="http://localhost:8000/download/accompaniment" download>Download Accompaniment</a></p>
+                `;
+            } catch (error) {
+                console.error(error);
+                resultDiv.innerHTML = '<p>Failed to split audio</p>';
+            }
+        });
+    </script>
+</body>
+
+</html>
