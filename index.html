@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
@@ -44,7 +44,7 @@
 <body data-bs-theme="dark">
     <main class="h-100 d-flex flex-wrap">
         <div class="h-100 d-flex flex-column sidebar p-3 bg-body-tertiary">
-            <a href="/"
+            <a href="index.html"
                 class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
                 <i class="bi bi-bezier2" style="font-size: 40px;"></i>
                 <span class="fs-4">NetNexus</span>
@@ -52,13 +52,13 @@
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="#" class="nav-link link-body-emphasis">
+                    <a href="index.html" class="nav-link active link-body-emphasis">
                         <i class="bi bi-house"></i>
                         Главная
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link active  link-body-emphasis">
+                    <a href="audio_spliter.html" class="nav-link link-body-emphasis">
                         <i class="bi bi-file-earmark-music"></i>
                         Разделитель аудио
                     </a>
@@ -109,56 +109,12 @@
 
         <!-- Основной контент страницы -->
         <div class="container content">
-            <h1 class="mb-4">Загрузить аудиофайл</h1>
-            <form id="audioForm" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="audioFile" class="form-label">Выберите аудиофайл</label>
-                    <input type="file" class="form-control" id="audioFile" name="audioFile" accept="audio/*">
-                </div>
-                <button type="submit" class="btn btn-primary">Разделить аудио</button>
-            </form>
-
-            <!-- Результаты разделения аудио -->
-            <div id="result" class="mt-4"></div>
+            <h1 class="mb-4">Главная страница</h1>
         </div>
     </main>
 
     <!-- Подключение скриптов Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const audioForm = document.getElementById('audioForm');
-        const resultDiv = document.getElementById('result');
-
-        audioForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const formData = new FormData();
-            const fileInput = document.getElementById('audioFile');
-            const file = fileInput.files[0];
-            formData.append('file', file);
-
-            try {
-                const response = await fetch('http://localhost:8000/split/', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to split audio');
-                }
-
-                const data = await response.json();
-                resultDiv.innerHTML = `
-                    <p>Split successful!</p>
-                    <p>Vocals: <a href="http://localhost:8000/download/vocals" download>Download Vocals</a></p>
-                    <p>Accompaniment: <a href="http://localhost:8000/download/accompaniment" download>Download Accompaniment</a></p>
-                `;
-            } catch (error) {
-                console.error(error);
-                resultDiv.innerHTML = '<p>Failed to split audio</p>';
-            }
-        });
-    </script>
 </body>
 
 </html>
