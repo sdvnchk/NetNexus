@@ -21,6 +21,7 @@
             width: 18rem;
             top: 0;
             left: -18rem;
+            z-index: 9999;
             /* Изначально сдвинута за пределы экрана */
             transition: left 0.3s ease;
             /* Плавное появление и исчезание */
@@ -78,16 +79,16 @@
             }
         }
 
-        .card {
-            z-index: -1;
-        }
-
         .jumbotron {
             margin-bottom: 2rem;
         }
 
-        .feature-item {
-            margin-bottom: 1rem;
+        .nav-link:hover {
+            background-color: var(--bs-secondary-bg);
+        }
+
+        .card {
+            margin-bottom: 1.5rem;
         }
     </style>
 </head>
@@ -123,25 +124,25 @@
                 <li>
                     <a href="#" class="nav-link link-body-emphasis">
                         <i class="bi bi-file-earmark-richtext"></i>
-                        txt2img
+                        Генератор изображений <br> <span class="badge text-bg-secondary">В разработке</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="nav-link link-body-emphasis">
                         <i class="bi bi-file-earmark-image"></i>
-                        img2img
+                        Редактор изображений <br> <span class="badge text-bg-secondary">В разработке</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="nav-link link-body-emphasis">
                         <i class="bi bi-badge-4k"></i>
-                        upscaler
+                        Повышение качества изображения <br> <span class="badge text-bg-secondary">В разработке</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="nav-link link-body-emphasis">
                         <i class="bi bi-file-earmark-play"></i>
-                        txt2vid
+                        Генератор видео <br> <span class="badge text-bg-secondary">В разработке</span>
                     </a>
                 </li>
             </ul>
@@ -165,34 +166,69 @@
 
         <!-- Основной контент страницы -->
         <div class="col content">
-            <div class="jumbotron col-md-4">
+            <div class="jumbotron col-12">
                 <h1 class="display-4">Привет, мир!</h1>
                 <p class="lead">Это главная страница NetNexus</p>
                 <hr class="my-4">
-                <p>Здесь вы можете найти различные инструменты для обработки аудио, изображений, видео и много чего еще!</p>
+                <p>Здесь вы можете найти различные инструменты для обработки аудио, изображений, видео и много чего еще!
+                </p>
                 <a class="btn btn-primary" href="#" role="button">Узнать больше</a>
             </div>
 
             <div class="row">
-                <div class="col-md-4">
-                    <div class="feature-item">
-                        <h2>Разделитель аудио</h2>
-                        <p>Разделите аудиофайл на его составляющие части: вокал, фоновая музыка и т. д.</p>
-                        <a class="btn btn-outline-primary" href="#">Подробнее</a>
+                <div class="col-sm-4 mb-3 mb-sm-0">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-file-earmark-music" style="font-size: 40px; margin-bottom: 10px;"></i>
+                            <h4 class="card-title">Разделитель аудио</h4>
+                            <p class="card-text">Разделите аудиофайл на его составляющие части: вокал, фоновая музыка и
+                                т.д.</p>
+                            <a class="btn btn-outline-primary" href="#">Подробнее</a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="feature-item">
-                        <h2>txt2img</h2>
-                        <p>Преобразуйте текстовые данные в изображения.</p>
-                        <a class="btn btn-outline-primary" href="#">Подробнее</a>
+                <div class="col-sm-4 mb-3 mb-sm-0">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-file-earmark-richtext" style="font-size: 40px; margin-bottom: 10px;"></i>
+                            <h4 class="card-title">Генератор изображений</h4>
+                            <span class="badge text-bg-secondary mb-2">В разработке</span>
+                            <p class="card-text">текст</p>
+                            <a class="btn btn-outline-primary" href="#">Подробнее</a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="feature-item">
-                        <h2>img2img</h2>
-                        <p>Используйте этот инструмент для обработки изображений.</p>
-                        <a class="btn btn-outline-primary" href="#">Подробнее</a>
+                <div class="col-sm-4 mb-3 mb-sm-0">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-file-earmark-image" style="font-size: 40px; margin-bottom: 10px;"></i>
+                            <h4 class="card-title">Редактор изображений</h4>
+                            <span class="badge text-bg-secondary mb-2">В разработке</span>
+                            <p class="card-text">текст</p>
+                            <a class="btn btn-outline-primary" href="#">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 mb-3 mb-sm-0">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-badge-4k" style="font-size: 40px; margin-bottom: 10px;"></i>
+                            <h4 class="card-title">Повышение качества изображения</h4>
+                            <span class="badge text-bg-secondary mb-2">В разработке</span>
+                            <p class="card-text">текст</p>
+                            <a class="btn btn-outline-primary" href="#">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 mb-3 mb-sm-0">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="bi bi-file-earmark-play" style="font-size: 40px; margin-bottom: 10px;"></i>
+                            <h4 class="card-title">Генератор видео</h4>
+                            <span class="badge text-bg-secondary mb-2">В разработке</span>
+                            <p class="card-text">текст</p>
+                            <a class="btn btn-outline-primary" href="#">Подробнее</a>
+                        </div>
                     </div>
                 </div>
             </div>

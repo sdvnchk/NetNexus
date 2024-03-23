@@ -21,6 +21,7 @@
             width: 18rem;
             top: 0;
             left: -18rem;
+            z-index: 9999;
             /* Изначально сдвинута за пределы экрана */
             transition: left 0.3s ease;
             /* Плавное появление и исчезание */
@@ -78,8 +79,8 @@
             }
         }
 
-        .card {
-            z-index: -1;
+        .progress {
+            height: 1.2rem;
         }
     </style>
 </head>
@@ -115,25 +116,25 @@
                 <li>
                     <a href="#" class="nav-link link-body-emphasis">
                         <i class="bi bi-file-earmark-richtext"></i>
-                        txt2img
+                        Генератор изображений <br> <span class="badge text-bg-secondary">В разработке</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="nav-link link-body-emphasis">
                         <i class="bi bi-file-earmark-image"></i>
-                        img2img
+                        Редактор изображений <br> <span class="badge text-bg-secondary">В разработке</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="nav-link link-body-emphasis">
                         <i class="bi bi-badge-4k"></i>
-                        upscaler
+                        Повышение качества изображения <br> <span class="badge text-bg-secondary">В разработке</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="nav-link link-body-emphasis">
                         <i class="bi bi-file-earmark-play"></i>
-                        txt2vid
+                        Генератор видео <br> <span class="badge text-bg-secondary">В разработке</span>
                     </a>
                 </li>
             </ul>
@@ -164,6 +165,10 @@
                     <input type="file" class="form-control" id="audioFile" name="audioFile" accept="audio/*">
                 </div>
                 <button type="submit" class="btn btn-primary">Разделить аудио</button>
+                <div class="progress mt-4" role="progressbar" aria-label="Progress" aria-valuenow="48"
+                    aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 48%">48%</div>
+                </div>
             </form>
 
             <!-- Результаты разделения аудио -->
