@@ -25,7 +25,7 @@ def split_audio(audio_file_path):
     os.makedirs(temp_output_folder, exist_ok=True)
     
     # Команда для разделения аудио с помощью Deezer Spleeter
-    command = f"spleeter separate -p spleeter:2stems -o {temp_output_folder} {audio_file_path}"
+    command = f"python -m spleeter separate -p spleeter:2stems -o {temp_output_folder} {audio_file_path}"
     
     # Выполнение команды через subprocess
     subprocess.run(command, shell=True)

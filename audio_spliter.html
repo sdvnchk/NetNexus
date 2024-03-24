@@ -165,9 +165,13 @@
                     <input type="file" class="form-control" id="audioFile" name="audioFile" accept="audio/*">
                 </div>
                 <button type="submit" class="btn btn-primary">Разделить аудио</button>
-                <div class="progress mt-4" role="progressbar" aria-label="Progress" aria-valuenow="48"
-                    aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar" style="width: 48%">48%</div>
+                <div id="loading" class="mt-3" style="display: none;">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span>Загрузка...</span>
+                    <br>
+                    <span id="loadingTime"></span>
                 </div>
             </form>
 
@@ -230,6 +234,10 @@
         // JavaScript код для обработки формы и вывода результата
         const audioForm = document.getElementById('audioForm');
         const resultDiv = document.getElementById('result');
+        const loadingDiv = document.getElementById('loading');
+        const loadingTimeSpan = document.getElementById('loadingTime');
+
+        let startTime; // Переменная для хранения времени начала загрузки
 
         audioForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -237,9 +245,41 @@
             const formData = new FormData();
             const fileInput = document.getElementById('audioFile');
             const file = fileInput.files[0];
+
+            // Проверка наличия файла
+            if (!file) {
+                console.error('No file selected.');
+                resultDiv.innerHTML = `
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Ошибка загрузки</h4>
+                <p class="mb-0">Вы не выбрали аудиофайл для загрузки.</p>
+            </div>
+        `;
+                return; // Прерываем выполнение функции
+            }
+
+            // Проверка типа файла
+            if (!file.type.startsWith('audio/')) {
+                console.error('Invalid file type.');
+                resultDiv.innerHTML = `
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Ошибка загрузки</h4>
+                <p class="mb-0">Пожалуйста, выберите аудиофайл для загрузки.</p>
+            </div>
+        `;
+                return; // Прерываем выполнение функции
+            }
+
             formData.append('file', file);
 
+            // Сброс времени при каждой новой отправке формы
+            loadingTimeSpan.textContent = '';
+            startTime = new Date();
+
             try {
+                // Отображение времени загрузки
+                loadingDiv.style.display = 'block';
+
                 const response = await fetch('http://localhost:8000/split/', {
                     method: 'POST',
                     body: formData
@@ -250,25 +290,40 @@
                 }
 
                 const data = await response.json();
+                // Скрытие времени загрузки после завершения загрузки
+                loadingDiv.style.display = 'none';
+
                 // Вывод результата
                 resultDiv.innerHTML = `
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Split successful!</h4>
-                        <p class="mb-0">Vocals: <a href="http://localhost:8000/download/vocals" download>Download Vocals</a></p>
-                        <p class="mb-0">Accompaniment: <a href="http://localhost:8000/download/accompaniment" download>Download Accompaniment</a></p>
-                    </div>
-                `;
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading">Разделение выполнено успешно!</h4>
+                <p class="mb-0">Вокал: <a href="http://localhost:8000/download/vocals" download>Скачать вокал</a></p>
+                <p class="mb-0">Аккомпанемент: <a href="http://localhost:8000/download/accompaniment" download>Скачать аккомпанемент</a></p>
+            </div>
+        `;
             } catch (error) {
                 console.error(error);
                 // Вывод сообщения об ошибке
                 resultDiv.innerHTML = `
-                    <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Failed to split audio</h4>
-                        <p class="mb-0">Please try again later.</p>
-                    </div>
-                `;
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Не удалось разделить аудио</h4>
+                <p class="mb-0">Пожалуйста, попробуйте еще раз позже.</p>
+            </div>
+        `;
+
+                // Скрытие времени загрузки в случае ошибки
+                loadingDiv.style.display = 'none';
             }
         });
+
+        // Обновление времени загрузки каждую секунду
+        setInterval(() => {
+            if (startTime) {
+                const currentTime = new Date();
+                const elapsedTime = (currentTime - startTime) / 1000; // в секундах
+                loadingTimeSpan.textContent = `Времени прошло: ${elapsedTime.toFixed(0)} сек.`;
+            }
+        }, 1000);
     </script>
 </body>
 
