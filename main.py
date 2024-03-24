@@ -1,12 +1,19 @@
 # Импорт необходимых модулей и классов из библиотек
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import FileResponse
+import re
+from fastapi import FastAPI, Form, UploadFile, File
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from sqlalchemy import Integer, create_engine, Column, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 import os
 import subprocess
 
 # Создание экземпляра приложения FastAPI
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Добавление middleware для обработки CORS (Cross-Origin Resource Sharing)
 # Это позволяет серверу принимать запросы от других источников (например, веб-страницы)
@@ -17,6 +24,40 @@ app.add_middleware(
     allow_methods=["*"],  # Разрешение всех HTTP-методов
     allow_headers=["*"]   # Разрешение всех HTTP-заголовков
 )
+
+# Параметры подключения к базе данных PostgreSQL
+SQLALCHEMY_DATABASE_URL = "postgresql://NetNexus-server:NetNexus-server!29042004@localhost:5432/NetNexus"
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, index=True)
+    email = Column(String, unique=True, index=True)
+    password = Column(String)
+
+# Обработчик GET-запроса для отображения страницы регистрации
+@app.get("/register/", response_class=HTMLResponse)
+async def register_page():
+    with open("static/register.html", "r") as f:
+        content = f.read()
+    return HTMLResponse(content)
+
+@app.post("/register/")
+async def register_user(username: str = Form(...), email: str = Form(...), password: str = Form(...)):
+    db = SessionLocal()
+    try:
+        user = User(username=username, email=email, password=password)
+        db.add(user)
+        db.commit()
+        return RedirectResponse(url="/static/login.html", status_code=302)
+    finally:
+        db.close()
 
 # Функция для разделения аудиофайла на вокал и аккомпанемент с использованием Deezer Spleeter
 def split_audio(audio_file_path):
